@@ -14,7 +14,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -56,7 +55,6 @@ public class GroupChatActivity extends AppCompatActivity
         currentUserID = mAuth.getCurrentUser().getUid();
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         GroupNameRef = FirebaseDatabase.getInstance().getReference().child("Groups").child(currentGroupName);
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
         InitializeFields();
 
@@ -67,9 +65,9 @@ public class GroupChatActivity extends AppCompatActivity
             @Override
             public void onClick(View v)
             {
-                SaveMessageInfoToDatabase();
+             SaveMessageInfoToDatabase();
 
-                userMessageInput.setText("");
+             userMessageInput.setText("");
             }
         });
 
@@ -141,12 +139,12 @@ public class GroupChatActivity extends AppCompatActivity
                 }
             }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError)
-            {
+          @Override
+          public void onCancelled(@NonNull DatabaseError databaseError)
+          {
 
-            }
-        });
+          }
+      });
 
     }
     private void SaveMessageInfoToDatabase()
