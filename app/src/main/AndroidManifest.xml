@@ -11,11 +11,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.iducate.Ichat.GroupChatActivity"></activity>
-        <activity android:name="com.iducate.Ichat.SettingsActivity" />
-        <activity android:name="com.iducate.Ichat.RegisterActivity" />
-        <activity android:name="com.iducate.Ichat.LoginActivity" />
-        <activity android:name="com.iducate.Ichat.MainActivity">
+        <activity android:name=".PhoneLoginActivity"></activity>
+        <activity android:name=".GroupChatActivity" />
+        <activity android:name=".SettingsActivity" />
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
