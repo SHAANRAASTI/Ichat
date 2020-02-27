@@ -190,42 +190,42 @@ SettingsActivity extends AppCompatActivity
     private void UpdateSettings()
     {
 
-    String setUserName= userName.getText().toString();
-    String setStatus = userStatus.getText().toString() ;
+        String setUserName= userName.getText().toString();
+        String setStatus = userStatus.getText().toString() ;
 
-    if(TextUtils.isEmpty(setUserName))
-    {
-        Toast.makeText(this, "Please Write Your user name first....", Toast.LENGTH_SHORT).show();
-    }
-    if(TextUtils.isEmpty(setStatus))
+        if(TextUtils.isEmpty(setUserName))
+        {
+            Toast.makeText(this, "Please Write Your user name first....", Toast.LENGTH_SHORT).show();
+        }
+        if(TextUtils.isEmpty(setStatus))
         {
             Toast.makeText(this, "Please Write Your status....", Toast.LENGTH_SHORT).show();
         }
-    else
-    {
-        HashMap<String,String>profileMap = new HashMap<>();
-        profileMap.put("uid",currentUserID);
-        profileMap.put("name",setUserName);
-        profileMap.put("status",setStatus);
-        RootRef.child("Users").child(currentUserID).setValue(profileMap)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task)
-                    {
-                        if(task.isSuccessful())
-
+        else
+        {
+            HashMap<String,String>profileMap = new HashMap<>();
+            profileMap.put("uid",currentUserID);
+            profileMap.put("name",setUserName);
+            profileMap.put("status",setStatus);
+            RootRef.child("Users").child(currentUserID).setValue(profileMap)
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task)
                         {
-                            SendUserToMainActivity();
+                            if(task.isSuccessful())
 
-                            Toast.makeText(SettingsActivity.this, "profile Updated Successfully...",Toast.LENGTH_SHORT).show();
+                            {
+                                SendUserToMainActivity();
+
+                                Toast.makeText(SettingsActivity.this, "profile Updated Successfully...",Toast.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                String message = task.getException().toString();
+                                Toast.makeText(SettingsActivity.this, "Error: "+ message, Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        else
-                        {
-                            String message = task.getException().toString();
-                            Toast.makeText(SettingsActivity.this, "Error: "+ message, Toast.LENGTH_SHORT).show();
-                    }
-                    }
-                });
+                    });
 
 
         }
@@ -239,34 +239,34 @@ SettingsActivity extends AppCompatActivity
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot)
                     {
-                     if((dataSnapshot.exists()) && (dataSnapshot.hasChild("name")&& (dataSnapshot.hasChild("image"))))
-                     {
-                         String retrieveUserName = dataSnapshot.child("name").getValue().toString();
-                         String retrieveStatus = dataSnapshot.child("status").getValue().toString();
-                         String retrieveProfileImage = dataSnapshot.child("image").getValue().toString();
+                        if((dataSnapshot.exists()) && (dataSnapshot.hasChild("name")&& (dataSnapshot.hasChild("image"))))
+                        {
+                            String retrieveUserName = dataSnapshot.child("name").getValue().toString();
+                            String retrieveStatus = dataSnapshot.child("status").getValue().toString();
+                            String retrieveProfileImage = dataSnapshot.child("image").getValue().toString();
 
-                         userName.setText(retrieveUserName);
-                         userStatus.setText(retrieveStatus);
-                         Picasso.get().load(retrieveProfileImage).into(userProfileImage);
+                            userName.setText(retrieveUserName);
+                            userStatus.setText(retrieveStatus);
+                            Picasso.get().load(retrieveProfileImage).into(userProfileImage);
 
-                     }
-                     else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name")))
-                     {
+                        }
+                        else if ((dataSnapshot.exists()) && (dataSnapshot.hasChild("name")))
+                        {
 
-                         String retrieveUserName = dataSnapshot.child("name").getValue().toString();
-                         String retrieveStatus = dataSnapshot.child("status").getValue().toString();
+                            String retrieveUserName = dataSnapshot.child("name").getValue().toString();
+                            String retrieveStatus = dataSnapshot.child("status").getValue().toString();
 
 
-                         userName.setText(retrieveUserName);
-                         userStatus.setText(retrieveStatus);
+                            userName.setText(retrieveUserName);
+                            userStatus.setText(retrieveStatus);
 
-                     }
-                     else
-                     {
-                         userName.setVisibility(View.VISIBLE);
-                         Toast.makeText(SettingsActivity.this, "Please set & Update Your profile information", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            userName.setVisibility(View.VISIBLE);
+                            Toast.makeText(SettingsActivity.this, "Please set & Update Your profile information", Toast.LENGTH_SHORT).show();
 
-                     }
+                        }
                     }
 
                     @Override
