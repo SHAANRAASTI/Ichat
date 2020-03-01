@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -138,18 +139,26 @@ SettingsActivity extends AppCompatActivity
 
                 StorageReference filePath = UserProfileImageRef.child(currentUserID + ".jpg");
 
-                filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
+
+               UploadTask uploadTask = filePath.putFile(resultUri);
+
+                Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                     @Override
-                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task)
-                    {
-                        if (task.isSuccessful())
-                        {
-                            Toast.makeText(SettingsActivity.this, "Profile Image uploaded successfully", Toast.LENGTH_SHORT).show();
+                    public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                        if (!task.isSuccessful()) {
+                            throw task.getException();
+                        }
 
-                            final Task<Uri> downloadedUrl = task.getResult().getStorage().getDownloadUrl();
-
+                        // Continue with the task to get the download URL
+                        return  task.getResult().getStorage().getDownloadUrl();
+                    }
+                }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Uri> task) {
+                        if (task.isSuccessful()) {
+                            Uri downloadUri = task.getResult();
                             RootRef.child("Users").child(currentUserID).child("image")
-                                    .setValue(downloadedUrl.getResult().toString())
+                                    .setValue(downloadUri.toString())
                                     .addOnCompleteListener(new OnCompleteListener<Void>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Void> task)
@@ -170,15 +179,14 @@ SettingsActivity extends AppCompatActivity
 
                                         }
                                     });
-                        }
-                        else
-                        {
-                            String message = task.getException().toString();
-                            Toast.makeText(SettingsActivity.this, "Error: " + message, Toast.LENGTH_SHORT).show();
-                            loadingBar.dismiss();
+
+                        } else {
+                            // Handle failures
+                            // ...
                         }
                     }
                 });
+
             }
         }
 
